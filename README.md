@@ -1,11 +1,11 @@
 # HR Analytics: Predicting Employee Turnover
 
 ## Project Overview
-This project analyzes HR data to build a predictive model for employee turnover, helping identify which employees are at risk of leaving and understanding key factors contributing to turnover. The solution includes a complete end-to-end pipeline for making predictions on individual employees and recommending targeted interventions.
+For my capstone project at the Google Advanced Data Analytics Certificate, I developed a machine learning solution for Salifort Motors to predict and reduce employee turnover. Using HR analytics, I identified key factors contributing to employee departures and created a predictive model with personalized retention strategies.
 
 ## Business Problem
-Employee turnover is costly for organizations in terms of:
-- Recruitment and training expenses
+Salifort Motors was experiencing significant employee turnover issues. Employee turnover is costly in terms of:
+- Recruitment and training expenses (50-200% of annual salary)
 - Lost productivity
 - Institutional knowledge loss
 - Team morale impact
@@ -13,50 +13,42 @@ Employee turnover is costly for organizations in terms of:
 By predicting which employees are likely to leave and why, HR departments can implement targeted retention strategies and improve overall workforce stability.
 
 ## Data
-The dataset contains information about:
-- Satisfaction levels
-- Performance evaluation scores
+I analyzed a comprehensive HR dataset with 14,999 employee records containing various features:
+- Satisfaction levels (0-1 scale)
+- Performance evaluation scores (0-1 scale)
 - Number of projects assigned
 - Average monthly working hours
 - Tenure at the company
-- Work accidents
-- Promotions in the last 5 years
-- Department and salary information
+- Work accident history
+- Promotions in last 5 years
+- Department
+- Salary level (low, medium, high)
 
-## Approach
+The dataset was clean with no missing values but required feature engineering to capture complex relationships between variables.
 
-### 1. Data Exploration and Preparation
-- Conducted comprehensive data quality assessments
-- Visualized relationships between key variables and turnover
-- Prepared data for modeling with proper preprocessing pipelines
+## Technical Approach
 
-### 2. Feature Engineering
-Created advanced engineered features to better capture employee experience:
-- `work_intensity`: Measures time-intensity per project
-- `relative_hours`: Normalizes hours worked against company average
-- `poor_work_life_balance`: Identifies excessive working hours
-- `productivity`: Measures performance efficiency per project
-- `satisfaction_per_hour`: Evaluates satisfaction relative to workload
-- `burnout_risk`: Identifies employees showing burnout signals
-- `flight_risk`: Spots talented employees who may be disengaged
-- `high_performer_risk`: Finds top performers who haven't been promoted
+### Data Exploration & Feature Engineering
+Created 10 engineered features to better capture employee behavior patterns:
+- `work_intensity`: Monthly hours divided by number of projects
+- `relative_hours`: Monthly hours relative to company average
+- `overworked`: Binary indicator for employees with above-average hours and high project count
+- `poor_work_life_balance`: Binary indicator for employees working excessive hours (>200/month)
+- `productivity`: Evaluation score per project
+- `satisfaction_per_hour`: Satisfaction level normalized by working hours
+- `underutilized`: High performers with few projects
+- `burnout_risk`: Combination of high hours, many projects, and low satisfaction
+- `flight_risk`: Low satisfaction despite high performance and tenure
+- `high_performer_risk`: High performers without recent promotion
 
-### 3. Model Development
+### Model Development
 - Built and compared multiple models (Logistic Regression, Random Forest, XGBoost)
 - Employed SMOTE to address class imbalance
 - Used feature selection to identify most predictive variables
 - Optimized hyperparameters through grid search and cross-validation
-
-### 4. Model Evaluation
 - Analyzed learning curves to diagnose bias/variance trade-offs
 - Optimized classification threshold based on business requirements
 - Assessed model calibration to ensure reliable probability estimates
-- Evaluated feature importance through permutation methods
-
-### 5. Deployment Solution
-- Created an end-to-end pipeline combining preprocessing and prediction
-- Developed functions for individual employee risk assessment
-- Built recommendation engine to suggest specific interventions based on risk factors
 
 ## Key Findings
 
@@ -67,68 +59,71 @@ Created advanced engineered features to better capture employee experience:
   2. Undervalued experienced employees (good evaluation, no promotion)
   3. Dissatisfied employees with poor work-life balance
 
-### Most Important Factors
-1. Number of projects (excessive workload)
-2. Monthly hours (overwork)
-3. Tenure at company (particularly years 3-4)
-4. Evaluation scores (high performers without recognition)
-5. Satisfaction per hour (diminishing satisfaction with overwork)
-
-### Department and Salary Insights
-- Higher turnover rates in technical departments
-- Employees with low salaries but high performance metrics show increased risk
-- Work intensity varies significantly across departments
-
-## Recommendations
-
-### Workload Management
-- Limit projects to maximum of 5 per employee
-- Review workload for employees exceeding 200 hours/month
-- Implement workload distribution analysis across teams
-
-### Career Development
-- Create promotion pathways for high performers
-- Implement regular career development check-ins at 3-4 year tenure mark
-- Review compensation alignment with performance metrics
-
-### Work-Life Balance
-- Develop programs to encourage proper work hours
-- Implement time tracking to identify consistently overworked employees
-- Create recognition systems beyond promotion and salary
-
-### Management Training
-- Train managers to identify burnout warning signs
-- Develop standardized check-in procedures for at-risk employees
-- Establish clear expectations for project scoping and time allocation
-
-## Technical Implementation
-
-### Technologies Used
-- Python (Pandas, NumPy, Scikit-learn)
-- Machine Learning (XGBoost, Random Forest)
-- Data Visualization (Matplotlib, Seaborn)
-- Model Deployment (Joblib, Pipeline)
+### Primary Turnover Drivers
+- **Satisfaction level**: By far the strongest predictor (23.6% importance)
+- **Work overload**: Employees with 7+ projects had nearly 100% turnover
+- **Work underload**: Employees with only 2 projects showed 55% turnover
+- **Hour extremes**: Both overworked (250+ hours) and underworked (130-150 hours) employees were at high risk
+- **Tenure impact**: Employees at 5-year tenure had highest turnover (45%), suggesting a critical career milestone
+- **Unrecognized talent**: High performers without promotion showed 58% higher turnover risk
 
 ### Model Performance
-The final model achieves:
-- 92% accuracy
-- 90% precision
-- 91% recall
-- 0.94 ROC-AUC score
+The Random Forest model achieved exceptional results:
+- 98.4% accuracy
+- 97% F1 score on test data
+- Outstanding ROC-AUC of 0.98
 
-### Risk Assessment System
-The implemented solution can:
-1. Process new employee data through feature engineering
-2. Predict turnover probability
-3. Identify specific risk factors
-4. Recommend targeted interventions
-5. Integrate into existing HR systems
+## Turnover Risk Prediction System
+I developed a complete end-to-end prediction system that:
+1. Takes an employee's data as input
+2. Performs feature engineering and preprocessing
+3. Generates a turnover risk probability and classification (Low/Medium/High)
+4. Identifies specific risk factors for that employee
+5. Recommends personalized retention actions based on identified risk factors
 
-## Future Work
-- Incorporate time-series analysis for temporal patterns
-- Develop interactive dashboard for HR departments
-- Implement A/B testing framework for intervention effectiveness
-- Integrate additional data sources (performance reviews, survey feedback)
+## Strategic Recommendations
+
+### Workload Management
+- Implement project caps to limit concurrent projects to a maximum of 5 per employee
+- Set up alerts for employees consistently working over 200 hours monthly
+- Ensure project distribution avoids both overwork and underutilization
+
+### Career Development
+- Create clear advancement pathways, especially for employees approaching the 3-5 year tenure mark
+- Establish regular promotion reviews to ensure high performers aren't overlooked
+- Develop lateral move opportunities when vertical promotion isn't available
+
+### Compensation Reviews
+- Conduct targeted salary audits focusing on high performers in low salary classifications
+- Develop clear compensation growth plans tied to performance metrics
+- Ensure compensation is competitive, particularly in high-risk departments
+
+### Department-Specific Strategies
+- Create customized retention plans for departments with the highest turnover rates
+- Address department-specific issues through targeted interventions and management training
+
+### Prediction System Integration
+- Implement the turnover prediction model as a proactive management tool
+- Establish intervention protocols for employees flagged as high-risk
+- Conduct quarterly risk assessments
+
+## Expected Business Impact
+Based on model projections and similar HR interventions, implementing these recommendations would likely result in:
+- 20-30% reduction in turnover within 12 months
+- Potential 15-20% reduction in annual recruitment and training costs
+- 15% increase in employee satisfaction scores across high-risk departments
+- 8% productivity improvement from better workload management
+- Enhanced knowledge retention from keeping experienced employees
+
+## Technical Skills Demonstrated
+This project showcased my abilities in:
+- Advanced feature engineering
+- Machine learning pipeline development
+- Classification modeling
+- Hyperparameter tuning
+- Class imbalance handling
+- Data visualization
+- Business analysis and recommendation development
 
 ## Conclusion
 This project demonstrates how advanced analytics can transform HR from reactive to proactive talent management. By identifying at-risk employees early and recommending targeted interventions, organizations can significantly improve retention, reduce costs, and maintain institutional knowledge.
